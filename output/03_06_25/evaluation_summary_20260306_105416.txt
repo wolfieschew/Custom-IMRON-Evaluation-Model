@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_llama3.1_8b_20260306_104715.txt
+Gold: answer.sql
+Database: localhost:3306/example_endpoint
+Date: 2026-03-06T10:54:16.535036
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 15/45 = 33.3%
+Execution Accuracy (EX): 21/45 = 46.7%
+EX (excl. SELECT 1): 21/45 = 46.7%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 44/45 = 97.8%
+Execution Validity: 44/45 = 97.8%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 7.898ms
+Min: 0.489ms
+Max: 70.120ms
+Median: 4.335ms
+P95: 31.287ms
+Total: 347.501ms
+Queries Measured: 44
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 1
+Gold Error Only: 0

@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_deepseek-coder_6.7b_20260306_105155.txt
+Gold: answer.sql
+Database: localhost:3306/example_endpoint
+Date: 2026-03-06T10:55:12.098460
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 17/45 = 37.8%
+Execution Accuracy (EX): 25/45 = 55.6%
+EX (excl. SELECT 1): 25/45 = 55.6%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 45/45 = 100.0%
+Execution Validity: 45/45 = 100.0%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 4.182ms
+Min: 0.428ms
+Max: 33.058ms
+Median: 1.993ms
+P95: 9.189ms
+Total: 188.169ms
+Queries Measured: 45
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 0
+Gold Error Only: 0

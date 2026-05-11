@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_falcon3_1b_20260511_211539.txt
+Gold: answer.sql
+Database: localhost:3306/endpoint
+Date: 2026-05-11T21:28:50.244004
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 2/45 = 4.4%
+Execution Accuracy (EX): 4/45 = 8.9%
+EX (excl. SELECT 1): 4/45 = 8.9%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 43/45 = 95.6%
+Execution Validity: 43/45 = 95.6%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 1.454ms
+Min: 0.218ms
+Max: 27.835ms
+Median: 0.385ms
+P95: 2.237ms
+Total: 62.513ms
+Queries Measured: 43
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 2
+Gold Error Only: 0

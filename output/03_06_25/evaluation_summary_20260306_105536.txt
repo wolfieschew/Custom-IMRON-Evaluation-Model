@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_codellama_7b_20260306_105019.txt
+Gold: answer.sql
+Database: localhost:3306/example_endpoint
+Date: 2026-03-06T10:55:36.252489
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 13/45 = 28.9%
+Execution Accuracy (EX): 21/45 = 46.7%
+EX (excl. SELECT 1): 21/45 = 46.7%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 45/45 = 100.0%
+Execution Validity: 45/45 = 100.0%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 4.667ms
+Min: 0.301ms
+Max: 34.703ms
+Median: 1.782ms
+P95: 19.016ms
+Total: 210.014ms
+Queries Measured: 45
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 0
+Gold Error Only: 0

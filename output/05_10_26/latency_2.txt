@@ -1,0 +1,467 @@
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: gemma3:4b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        1.26s
+  Avg (successful): 1.26s
+  Median:           0.94s
+  Min:              0.76s
+  Max:              10.38s
+  Total Time:       56.86s (0.95m)
+
+Latency per Domain:
+  transaction_enose: avg 1.46s (23 queries)
+  transaction_enose + transaction_object_detection: avg 1.24s (2 queries)
+  transaction_object_detection: avg 1.03s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_gemma3_4b_20260306_101111.txt
+  2. output\metric_imron_topk3_gemma3_4b_20260306_101111.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: phi3.5:3.8b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        0.54s
+  Avg (successful): 0.54s
+  Median:           0.35s
+  Min:              0.23s
+  Max:              5.29s
+  Total Time:       24.16s (0.40m)
+
+Latency per Domain:
+  transaction_enose: avg 0.65s (23 queries)
+  transaction_enose + transaction_object_detection: avg 0.62s (2 queries)
+  transaction_object_detection: avg 0.40s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_phi3.5_3.8b_20260306_101311.txt
+  2. output\metric_imron_topk3_phi3.5_3.8b_20260306_101311.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: smollm2:1.7b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        0.60s
+  Avg (successful): 0.60s
+  Median:           0.36s
+  Min:              0.23s
+  Max:              6.42s
+  Total Time:       27.12s (0.45m)
+
+Latency per Domain:
+  transaction_enose: avg 0.70s (23 queries)
+  transaction_enose + transaction_object_detection: avg 0.75s (2 queries)
+  transaction_object_detection: avg 0.47s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_smollm2_1.7b_20260306_101424.txt
+  2. output\metric_imron_topk3_smollm2_1.7b_20260306_101424.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: granite3.3:2b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        0.51s
+  Avg (successful): 0.51s
+  Median:           0.37s
+  Min:              0.22s
+  Max:              4.82s
+  Total Time:       23.07s (0.38m)
+
+Latency per Domain:
+  transaction_enose: avg 0.61s (23 queries)
+  transaction_enose + transaction_object_detection: avg 0.83s (2 queries)
+  transaction_object_detection: avg 0.36s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_granite3.3_2b_20260306_101522.txt
+  2. output\metric_imron_topk3_granite3.3_2b_20260306_101522.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: mistral:7b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        1.05s
+  Avg (successful): 1.05s
+  Median:           0.70s
+  Min:              0.33s
+  Max:              9.32s
+  Total Time:       47.07s (0.78m)
+
+Latency per Domain:
+  transaction_enose: avg 1.34s (23 queries)
+  transaction_enose + transaction_object_detection: avg 0.96s (2 queries)
+  transaction_object_detection: avg 0.71s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_mistral_7b_20260306_101617.txt
+  2. output\metric_imron_topk3_mistral_7b_20260306_101617.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: llama3.1:8b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        1.29s
+  Avg (successful): 1.29s
+  Median:           1.00s
+  Min:              0.59s
+  Max:              9.43s
+  Total Time:       58.12s (0.97m)
+
+Latency per Domain:
+  transaction_enose: avg 1.53s (23 queries)
+  transaction_enose + transaction_object_detection: avg 1.16s (2 queries)
+  transaction_object_detection: avg 1.03s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_llama3.1_8b_20260306_101741.txt
+  2. output\metric_imron_topk3_llama3.1_8b_20260306_101741.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: qwen2.5:7b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        0.95s
+  Avg (successful): 0.95s
+  Median:           0.74s
+  Min:              0.41s
+  Max:              7.98s
+  Total Time:       42.93s (0.72m)
+
+Latency per Domain:
+  transaction_enose: avg 1.17s (23 queries)
+  transaction_enose + transaction_object_detection: avg 0.99s (2 queries)
+  transaction_object_detection: avg 0.70s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_qwen2.5_7b_20260306_101914.txt
+  2. output\metric_imron_topk3_qwen2.5_7b_20260306_101914.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: falcon3:1b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        0.66s
+  Avg (successful): 0.66s
+  Median:           0.50s
+  Min:              0.34s
+  Max:              7.19s
+  Total Time:       29.90s (0.50m)
+
+Latency per Domain:
+  transaction_enose: avg 0.79s (23 queries)
+  transaction_enose + transaction_object_detection: avg 0.71s (2 queries)
+  transaction_object_detection: avg 0.51s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_falcon3_1b_20260306_102223.txt
+  2. output\metric_imron_topk3_falcon3_1b_20260306_102223.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: codellama:7b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        1.34s
+  Avg (successful): 1.34s
+  Median:           1.15s
+  Min:              0.57s
+  Max:              7.92s
+  Total Time:       60.21s (1.00m)
+
+Latency per Domain:
+  transaction_enose: avg 1.40s (23 queries)
+  transaction_enose + transaction_object_detection: avg 2.22s (2 queries)
+  transaction_object_detection: avg 1.17s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_codellama_7b_20260306_102332.txt
+  2. output\metric_imron_topk3_codellama_7b_20260306_102332.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================
+
+
+
+================================================================================
+GENERATION COMPLETE!
+================================================================================
+Domain: IMRON (MySQL)
+Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine
+LLM: deepseek-coder:6.7b (temp=0.3)
+Embedding: mxbai-embed-large
+Database: localhost:3306/example_endpoint
+Tables: transaction_enose, transaction_object_detection
+Few-Shot Examples: 8 generic patterns (no domain leakage)
+
+Results:
+  Total: 45
+  Successful: 45
+  Errors: 0
+  Fallbacks (SELECT 1): 0
+  Valid: 45
+  Invalid: 0
+  Success Rate: 100.0%
+
+Latency (per query):
+  Avg (all):        1.39s
+  Avg (successful): 1.39s
+  Median:           1.18s
+  Min:              0.58s
+  Max:              7.97s
+  Total Time:       62.64s (1.04m)
+
+Latency per Domain:
+  transaction_enose: avg 1.55s (23 queries)
+  transaction_enose + transaction_object_detection: avg 2.33s (2 queries)
+  transaction_object_detection: avg 1.12s (20 queries)
+
+Output Files:
+  1. output\prediksi_imron_topk3_deepseek-coder_6.7b_20260306_102513.txt
+  2. output\metric_imron_topk3_deepseek-coder_6.7b_20260306_102513.csv
+
+============================================================
+DOMAIN BREAKDOWN
+============================================================
+  transaction_enose: 23 questions
+  transaction_object_detection: 20 questions
+  transaction_enose + transaction_object_detection: 2 questions
+============================================================

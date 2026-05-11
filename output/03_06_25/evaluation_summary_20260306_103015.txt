@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_mistral_7b_20260306_101617.txt
+Gold: answer.sql
+Database: localhost:3306/example_endpoint
+Date: 2026-03-06T10:30:15.675334
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 9/45 = 20.0%
+Execution Accuracy (EX): 19/45 = 42.2%
+EX (excl. SELECT 1): 19/45 = 42.2%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 43/45 = 95.6%
+Execution Validity: 43/45 = 95.6%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 7.249ms
+Min: 0.353ms
+Max: 72.560ms
+Median: 3.014ms
+P95: 34.857ms
+Total: 311.716ms
+Queries Measured: 43
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 2
+Gold Error Only: 0

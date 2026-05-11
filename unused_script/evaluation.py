@@ -20,7 +20,7 @@ DB_PORT = os.getenv("DB_PORT", "3306")
 DB_NAME = os.getenv("DB_NAME", "endpoint")
 
 # Path
-PRED_FILE = r"output\prediksi_imron_topk3_phi4-mini_3.8b_20260511_214803.txt"
+PRED_FILE = r"output\prediksi_imron_topk3_qwen2.5_7b_20260414_213212.txt"
 GOLD_FILE = r"answer.sql"
 OUTPUT_DIR = "output"
 
@@ -345,17 +345,6 @@ def format_latency(ms):
         return f"{ms / 1000:.2f}s"
 
 
-def preview_rows(rows, max_rows=3, max_chars=500):
-    if rows is None:
-        return ""
-    # rows: list[tuple[str, ...]] dari execute_sql_safe()
-    parts = []
-    for row in rows[:max_rows]:
-        parts.append(" | ".join(str(v) for v in row))
-    s = " || ".join(parts).replace("\n", "\\n")
-    return s[:max_chars] + ("..." if len(s) > max_chars else "")
-
-
 # ==================== MAIN ====================
 
 
@@ -454,11 +443,6 @@ def main():
         pred_result, pred_err, pred_latency = execute_sql_safe(engine, pred_sql)
         gold_result, gold_err, gold_latency = execute_sql_safe(engine, gold_sql)
 
-        pred_rows_count = len(pred_result) if pred_result is not None else ""
-        gold_rows_count = len(gold_result) if gold_result is not None else ""
-        pred_rows_preview = preview_rows(pred_result)
-        gold_rows_preview = preview_rows(gold_result)
-
         if pred_err is None:
             valid_pred_count += 1
             pred_latencies.append(pred_latency)
@@ -553,10 +537,6 @@ def main():
                 "pred_syntax_error": pred_syntax_err or "",
                 "pred_latency_ms": round(pred_latency, 3),
                 "gold_latency_ms": round(gold_latency, 3),
-                "pred_rows_count": pred_rows_count,
-                "gold_rows_count": gold_rows_count,
-                "pred_rows_preview": pred_rows_preview,
-                "gold_rows_preview": gold_rows_preview,
             }
         )
 
@@ -680,10 +660,6 @@ def main():
             "pred_error",
             "gold_error",
             "pred_syntax_error",
-            "pred_rows_count",
-            "gold_rows_count",
-            "pred_rows_preview",
-            "gold_rows_preview",
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()

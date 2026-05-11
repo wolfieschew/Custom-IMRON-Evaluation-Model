@@ -1,0 +1,45 @@
+SELECT user_key, device_id, date_time, type, JSON_UNQUOTE(JSON_EXTRACT(data_send, '$.transaction_type')) AS transaction_type, value FROM transaction_enose	transaction_enose
+SELECT * FROM transaction_enose ORDER BY date_time DESC LIMIT 50	transaction_enose
+SELECT * FROM transaction_enose ORDER BY date_time ASC LIMIT 1	transaction_enose
+SELECT * FROM transaction_enose WHERE type = 'greentea' ORDER BY date_time DESC	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE type = 'e-nose' AND JSON_EXTRACT(data_send, '$.type') = 'greentea'	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE device_id = 'e-nose_1'	transaction_enose
+SELECT * FROM transaction_enose WHERE JSON_EXTRACT(data_send, '$.classification') = 'Baik'	transaction_enose
+SELECT * FROM transaction_enose WHERE type = 'multiclass A' AND JSON_EXTRACT(data_send, '$.class') = 'A'	transaction_enose
+SELECT * FROM transaction_enose WHERE YEAR(date_time) = 2025 AND MONTH(date_time) = 2 AND type LIKE '%e-nose%' ORDER BY date_time DESC LIMIT 50	transaction_enose
+SELECT * FROM transaction_enose WHERE YEAR(date_time) = 2025	transaction_enose
+SELECT MAX(date_time) AS latest_transaction FROM transaction_enose	transaction_enose
+SELECT * FROM transaction_enose WHERE TIME(date_time) BETWEEN '10:00:00' AND '12:00:00' ORDER BY date_time DESC	transaction_enose
+SELECT MIN(value) AS lowest_score FROM transaction_enose WHERE type = 'classification'	transaction_enose
+SELECT device_id, COUNT(*) AS jumlah_transaksi FROM transaction_enose GROUP BY device_id	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE type IN ('Klasifikasi Baik', 'Klasifikasi Cacat Mutu') AND JSON_EXTRACT(data_send, '$.classification') IS NOT NULL	transaction_enose
+SELECT `type`, COUNT(*) AS total FROM `transaction_enose` WHERE `type` LIKE '%e-nose%' GROUP BY `type`	transaction_enose
+SELECT `type`, AVG(`value`) AS average_score FROM transaction_enose JOIN (SELECT JSON_UNQUOTE(JSON_EXTRACT(data_send, '$.tea_type')) AS tea_type, user_key FROM transaction_enose WHERE JSON_EXISTS(data_send, '$.tea_type') GROUP BY tea_type) AS tea_types ON transaction_enose.user_key = tea_types.user_key GROUP BY type ORDER BY average_score DESC	transaction_enose
+SELECT device_id, COUNT(*) AS total_data_sent FROM transaction_enose JOIN (SELECT device_id, JSON_EXTRACT(data_send, '$.device') AS device_id_json FROM transaction_enose GROUP BY device_id) AS device_count ON transaction_enose.device_id = device_count.device_id_json GROUP BY device_id ORDER BY total_data_sent DESC LIMIT 1	transaction_enose
+SELECT COUNT(*) AS total_transactions FROM transaction_enose WHERE MONTH(date_time) = 7 AND YEAR(date_time) = 2025 AND device_id = 'e-nose_1' AND type = 'transaksi' GROUP BY DATE(date_time) ORDER BY date_time DESC LIMIT 1	transaction_enose
+SELECT DATE(date_time) AS tanggal, COUNT(*) AS jumlah FROM transaction_enose WHERE type = 'transaksi e-nose' GROUP BY tanggal ORDER BY jumlah DESC LIMIT 1	transaction_enose
+SELECT COUNT(*) AS total_transactions, SUM(CASE WHEN value = 'Cacat Mutu' THEN 1 ELSE 0 END) AS cacat_mutu, COUNT(CASE WHEN value = 'Cacat Mutu' THEN 1 ELSE NULL END) AS cacat_mutu_count FROM transaction_enose WHERE value IN ('Cacat Mutu')	transaction_enose
+SELECT MONTH(date_time) AS bulan FROM transaction_enose WHERE JSON_EXTRACT(data_send, '$.transactions') > 20 GROUP BY bulan HAVING COUNT(*) > 20 ORDER BY bulan ASC	transaction_enose
+SELECT `date_time`, `user_key`, `device_id`, `type`, JSON_UNQUOTE(JSON_EXTRACT(`data_send`, '$.transaction_count')) AS transaction_count FROM transaction_enose JOIN (SELECT `date_time`, COUNT(`user_key`) AS total_transactions FROM transaction_enose GROUP BY `date_time` ORDER BY total_transactions DESC LIMIT 1) as max_transactions ON transaction_enose.`date_time` = max_transactions.`date_time` ORDER BY transaction_count DESC LIMIT 1	transaction_enose
+SELECT * FROM transaction_object_detection ORDER BY detection_time DESC	transaction_object_detection
+SELECT * FROM transaction_object_detection ORDER BY detection_time DESC LIMIT 10	transaction_object_detection
+SELECT * FROM transaction_object_detection ORDER BY detection_time DESC LIMIT 50	transaction_object_detection
+SELECT * FROM transaction_object_detection ORDER BY detection_time ASC LIMIT 1	transaction_object_detection
+SELECT DISTINCT type FROM transaction_object_detection	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE type = 'car' ORDER BY detection_time DESC	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE type = 'bus'	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE value < 5 ORDER BY detection_time DESC	transaction_object_detection
+SELECT MAX(detection_time) AS latest_detection_time FROM transaction_object_detection	transaction_object_detection
+SELECT MIN(value) AS minimum_value FROM transaction_object_detection GROUP BY detection_time, device_id, user_key	transaction_object_detection
+SELECT `type`, COUNT(`value`) AS total FROM `transaction_object_detection` GROUP BY `type` ORDER BY total DESC	transaction_object_detection
+SELECT `type`, COUNT(*) AS total FROM `transaction_object_detection` GROUP BY `type` ORDER BY total DESC	transaction_object_detection
+SELECT COUNT(*) AS total_objects, DATE(detection_time) AS detection_date FROM transaction_object_detection GROUP BY detection_date ORDER BY detection_date DESC	transaction_object_detection
+SELECT HOUR(detection_time) AS hour, COUNT(*) AS total FROM transaction_object_detection WHERE detection_time >= '2025-02-19 00:00:00' AND detection_time < '2025-02-20 00:00:00' GROUP BY hour ORDER BY total DESC	transaction_object_detection
+SELECT `type`, COUNT(`value`) AS `total_deteksi`, DATE(`detection_time`) AS `tanggal` FROM `transaction_object_detection` GROUP BY `type`, `tanggal` ORDER BY `tanggal` DESC, `type` ASC	transaction_object_detection
+SELECT `type`, COUNT(`value`) AS total FROM `transaction_object_detection` GROUP BY `type` ORDER BY total DESC LIMIT 1	transaction_object_detection
+SELECT `type`, COUNT(`value`) AS total FROM `transaction_object_detection` GROUP BY `type` ORDER BY total DESC LIMIT 1	transaction_object_detection
+SELECT `detection_time`, COUNT(`value`) AS `count` FROM `transaction_object_detection` WHERE `type` = 'people' GROUP BY `detection_time` ORDER BY `count` DESC LIMIT 1	transaction_object_detection
+SELECT type, COUNT(*) AS total, COUNT(*) * 100.0 / (SELECT COUNT(*) FROM transaction_object_detection) AS persentase FROM transaction_object_detection GROUP BY type ORDER BY persentase DESC	transaction_object_detection
+SELECT `type`, COUNT(`value`) AS total FROM `transaction_object_detection` WHERE `device_id` = 'edge_1' GROUP BY `type` ORDER BY total DESC	transaction_object_detection
+SELECT device_id FROM transaction_enose WHERE device_id NOT IN (SELECT device_id FROM transaction_object_detection)	transaction_enose + transaction_object_detection
+SELECT DATE(transaction_enose.date_time) AS date, COUNT(*) AS total FROM transaction_enose LEFT JOIN transaction_object_detection ON transaction_enose.device_id = transaction_object_detection.device_id GROUP BY date ORDER BY date DESC	transaction_enose + transaction_object_detection

@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_smollm2_1.7b_20260511_165456.txt
+Gold: answer.sql
+Database: localhost:3306/endpoint
+Date: 2026-05-11T16:56:27.857743
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 4/45 = 8.9%
+Execution Accuracy (EX): 9/45 = 20.0%
+EX (excl. SELECT 1): 9/45 = 20.0%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 38/45 = 84.4%
+Execution Validity: 38/45 = 84.4%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 1.225ms
+Min: 0.218ms
+Max: 6.905ms
+Median: 1.279ms
+P95: 2.421ms
+Total: 46.554ms
+Queries Measured: 38
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 7
+Gold Error Only: 0

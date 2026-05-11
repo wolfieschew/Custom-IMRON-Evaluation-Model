@@ -1,0 +1,45 @@
+SELECT * FROM transaction_enose WHERE date_time > '2023-01-01 00:00:00' AND type = 'data_send' ORDER BY date_time DESC LIMIT 50	transaction_enose
+SELECT * FROM transaction_enose WHERE date_time = (SELECT MAX(date_time) FROM transaction_enose)	transaction_enose
+SELECT * FROM transaction_enose WHERE date_time = LAST_INSERT_ID() ORDER BY date_time DESC LIMIT 1	transaction_enose
+SELECT * FROM transaction_enose WHERE type = 'greentea' ORDER BY device_id, date_time DESC LIMIT 50	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE device_id = 'greentea'	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE device_id = 'e-nose_1'	transaction_enose
+SELECT * FROM transaction_enose WHERE type = 'Baik'	transaction_enose
+SELECT * FROM transaction_enose WHERE device_id = 'e-nose' AND type = 'multiclass A'	transaction_enose
+SELECT * FROM transaction_enose WHERE YEAR(date_time) = 2025 AND MONTH(date_time) = 2 ORDER BY date_time DESC LIMIT 100	transaction_enose
+SELECT * FROM transaction_enose WHERE YEAR(date_time) = 2025 AND type = 'e-nose' ORDER BY date_time DESC LIMIT 100	transaction_enose
+SELECT MAX(date_time) AS last_transaction FROM transaction_enose WHERE type = 'e-nose'	transaction_enose
+SELECT * FROM transaction_enose WHERE date_time BETWEEN '2025-01-10 10:00:00' AND '2025-01-10 12:00:00'	transaction_enose
+SELECT 'table_enose' AS source, COUNT(*) AS total FROM transaction_enose WHERE type = 'score' AND value IS NOT NULL ORDER BY total DESC LIMIT 1	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE device_id IS NOT NULL	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE type = 'Baik' AND data_send IS NOT NULL AND value IS NOT NULL AND (data_send LIKE '%Cacat Mutu%' OR data_send LIKE '%Baik%')	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE type IN ('A', 'B', 'C', 'D', 'E')	transaction_enose
+SELECT category, AVG(value) AS average_score FROM measurements WHERE type = 'teh' GROUP BY category ORDER BY average_score DESC LIMIT 50	transaction_enose
+SELECT user_key, MAX(value) AS max_data_send FROM transaction_enose GROUP BY user_key ORDER BY max_data_send DESC LIMIT 1	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE device_id = 'e-nose_1' AND YEAR(date_time) = 2025 AND MONTH(date_time) = 7 ORDER BY date_time DESC LIMIT 50	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE date_time = '2023-10-05' ORDER BY total DESC LIMIT 1	transaction_enose
+SELECT COUNT(*) AS total FROM transaction_enose WHERE data_send REGEXP 'Cacat Mutu' AND type = 'Cacat Mutu'	transaction_enose
+SELECT DATE(transaction_enose.date_time) AS bulan, COUNT(*) AS total FROM transaction_enose WHERE type = 'e-nose' GROUP BY DATE(transaction_enose.date_time) ORDER BY DATE(transaction_enose.date_time) ASC	transaction_enose
+SELECT transaction_enose.*, COUNT(*) AS total_transactions FROM transaction_enose WHERE date_time BETWEEN '2025-01-01' AND '2025-12-31' GROUP BY user_key, device_id, type, data_send, value ORDER BY total_transactions DESC	transaction_enose
+SELECT * FROM transaction_object_detection WHERE type = 'detected'	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE type = 'detected' AND detection_time > CURDATE() ORDER BY detection_time LIMIT 10	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE type = 'detected' AND detection_time > (SELECT MAX(detection_time) FROM transaction_object_detection WHERE type = 'detected') ORDER BY detection_time ASC LIMIT 100	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE detection_time = (SELECT MAX(detection_time) FROM transaction_object_detection)	transaction_object_detection
+SELECT DISTINCT type FROM transaction_object_detection WHERE detection_time IS NOT NULL ORDER BY type	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE type = 'detections' AND object_type = 'car'	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE type = 'bus'	transaction_object_detection
+SELECT * FROM transaction_object_detection WHERE value < 5 ORDER BY detection_time DESC LIMIT 100	transaction_object_detection
+SELECT detection_time AS last_detection_time FROM transaction_object_detection ORDER BY detection_time DESC LIMIT 1	transaction_object_detection
+SELECT MIN(value) AS min_detection FROM transaction_object_detection WHERE detection_time BETWEEN '2023-01-01 00:00:00' AND '2023-12-31 23:59:59'	transaction_object_detection
+SELECT type, COUNT(*) AS total FROM transaction_object_detection GROUP BY type	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE type IN ('detection', 'annotation') AND object_type IN ('person', 'car', 'bicycle')	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE detection_time >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR) AND type = 'OBJECT'	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE detection_time >= '2025-02-19 00:00:00' AND detection_time < '2025-03-01 00:00:00'	transaction_object_detection
+SELECT type, COUNT(*) AS total FROM transaction_object_detection WHERE detection_time >= CURDATE() AND device_id IS NOT NULL GROUP BY type ORDER BY total DESC	transaction_object_detection
+SELECT detection_time, type, COUNT(*) AS total FROM transaction_object_detection WHERE device_id IN (SELECT id FROM device WHERE type = 'camera') GROUP BY detection_time, type ORDER BY total DESC LIMIT 1	transaction_object_detection
+SELECT detection_time, type, COUNT(*) AS total FROM transaction_object_detection WHERE type NOT NULL GROUP BY type ORDER BY total DESC LIMIT 1	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE type = 'people' AND detection_time >= CURDATE() - INTERVAL 1 YEAR	transaction_object_detection
+SELECT type, COUNT(*) AS total, (COUNT(*)/ SUM(COUNT(*)) OVER()) * 100 AS percentage FROM transaction_object_detection GROUP BY type	transaction_object_detection
+SELECT COUNT(*) AS total FROM transaction_object_detection WHERE detection_time BETWEEN '2023-01-01' AND '2023-12-31' AND type = 'edge_1'	transaction_object_detection
+SELECT DISTINCT device_id FROM transaction_enose WHERE NOT EXISTS (SELECT 1 FROM transaction_object_detection WHERE device_id = transaction_enose.device_id)	transaction_enose + transaction_object_detection
+SELECT COUNT(*) AS total FROM (SELECT user_key, SUM(value) AS total_transactions FROM transaction_enose JOIN transaction_object_detection ON transaction_enose.device_id = transaction_object_detection.device_id GROUP BY user_key) AS subquery WHERE date_time IS NOT NULL	transaction_enose + transaction_object_detection

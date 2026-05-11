@@ -1,33 +1,33 @@
-import os
-import time
 import csv
 import json
+import os
 import re
+import time
 from datetime import datetime
-from typing import List, Dict, Optional
+from typing import Dict, List, Optional
 
+from llama_index.core import Settings, SQLDatabase, VectorStoreIndex
 from llama_index.core.indices.struct_store.sql_query import SQLTableRetrieverQueryEngine
-from llama_index.core.objects import SQLTableNodeMapping, ObjectIndex, SQLTableSchema
-from llama_index.core import SQLDatabase, Settings, VectorStoreIndex
-from llama_index.core.query_engine import NLSQLTableQueryEngine
+from llama_index.core.objects import ObjectIndex, SQLTableNodeMapping, SQLTableSchema
 from llama_index.core.prompts import PromptTemplate
+from llama_index.core.query_engine import NLSQLTableQueryEngine
 from llama_index.embeddings.ollama import OllamaEmbedding
 from llama_index.llms.ollama import Ollama
-from sqlalchemy import create_engine, MetaData, text as sa_text
-
+from sqlalchemy import MetaData, create_engine
+from sqlalchemy import text as sa_text
 
 # Configuration
 
 EMBEDDING_MODEL = "mxbai-embed-large"
-LLM_MODEL = "gemma3:4b"
+LLM_MODEL = "phi4-mini:3.8b"
 OLLAMA_BASE_URL = "http://localhost:11434"
 
 # MySQL Database Configuration
-DB_USER = os.getenv('DB_USER', 'root')
-DB_PASS = os.getenv('DB_PASS', '')
-DB_HOST = os.getenv('DB_HOST', 'localhost')
-DB_PORT = os.getenv('DB_PORT', '3306')
-DB_NAME = os.getenv('DB_NAME', 'example_endpoint')
+DB_USER = os.getenv("DB_USER", "root")
+DB_PASS = os.getenv("DB_PASS", "")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "3306")
+DB_NAME = os.getenv("DB_NAME", "endpoint")
 
 # File paths
 GOLD_FILE = "questions.sql"
@@ -44,12 +44,15 @@ TOP_K_SCHEMA_FRAGMENTS = 3
 
 # Domain tables mapping
 DOMAIN_TABLES = {
-    'transaction_enose': ['transaction_enose'],
-    'transaction_object_detection': ['transaction_object_detection'],
-    'transaction_enose + transaction_object_detection': ['transaction_enose', 'transaction_object_detection'],
+    "transaction_enose": ["transaction_enose"],
+    "transaction_object_detection": ["transaction_object_detection"],
+    "transaction_enose + transaction_object_detection": [
+        "transaction_enose",
+        "transaction_object_detection",
+    ],
 }
 
-ALL_TABLES = ['transaction_enose', 'transaction_object_detection']
+ALL_TABLES = ["transaction_enose", "transaction_object_detection"]
 
 
 # Few Shot
@@ -106,29 +109,27 @@ def parse_gold_file(gold_file_path):
     """Parse gold SQL file (questions.sql format for IMRON domain)"""
     questions = []
 
-    with open(gold_file_path, 'r', encoding='utf-8') as f:
-        lines = f.read().split('\n')
+    with open(gold_file_path, "r", encoding="utf-8") as f:
+        lines = f.read().split("\n")
 
     for line in lines:
         line = line.strip()
-        if not line or line.startswith('--'):
+        if not line or line.startswith("--"):
             continue
 
-        if line.startswith('Question') and '|||' in line:
+        if line.startswith("Question") and "|||" in line:
             try:
-                parts = line.split('|||')
+                parts = line.split("|||")
                 question_part = parts[0].strip()
                 db_id = parts[1].strip()
 
-                colon_idx = question_part.find(':')
-                q_num = int(question_part[:colon_idx].replace('Question', '').strip())
-                question_text = question_part[colon_idx + 1:].strip()
+                colon_idx = question_part.find(":")
+                q_num = int(question_part[:colon_idx].replace("Question", "").strip())
+                question_text = question_part[colon_idx + 1 :].strip()
 
-                questions.append({
-                    'id': q_num,
-                    'question': question_text,
-                    'db_id': db_id
-                })
+                questions.append(
+                    {"id": q_num, "question": question_text, "db_id": db_id}
+                )
             except Exception as e:
                 print(f"  [WARN] Failed to parse line: {line} -> {e}")
                 continue
@@ -139,14 +140,11 @@ def parse_gold_file(gold_file_path):
 def setup_llamaindex():
     """Setup LlamaIndex with embedding and LLM models"""
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("SETTING UP LLAMAINDEX TEXT-TO-SQL FOR IMRON DOMAIN (MySQL)")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
-    embed_model = OllamaEmbedding(
-        model_name=EMBEDDING_MODEL,
-        base_url=OLLAMA_BASE_URL
-    )
+    embed_model = OllamaEmbedding(model_name=EMBEDDING_MODEL, base_url=OLLAMA_BASE_URL)
 
     llm = Ollama(
         model=LLM_MODEL,
@@ -156,10 +154,10 @@ def setup_llamaindex():
         request_timeout=120.0,
         context_window=4096,
         additional_kwargs={
-            'num_predict': LLM_NUM_PREDICT,
-            'num_ctx': 4096,
-            'stop': ['\n\n', 'Question:', '# EXAMPLE']
-        }
+            "num_predict": LLM_NUM_PREDICT,
+            "num_ctx": 4096,
+            "stop": ["\n\n", "Question:", "# EXAMPLE"],
+        },
     )
 
     Settings.embed_model = embed_model
@@ -173,20 +171,22 @@ def setup_llamaindex():
     print(f"  ✓ Sample Rows: {INCLUDE_SAMPLE_ROWS}")
     print(f"  ✓ Top-K Schema Fragments: {TOP_K_SCHEMA_FRAGMENTS}")
     print(f"  ✓ Database: MySQL ({DB_HOST}:{DB_PORT}/{DB_NAME})")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     return embed_model, llm
 
 
 def create_mysql_engine():
     """Create MySQL database engine"""
-    connection_string = f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    connection_string = (
+        f"mysql+pymysql://{DB_USER}:{DB_PASS}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
+    )
     engine = create_engine(
         connection_string,
         pool_size=10,
         max_overflow=20,
         pool_pre_ping=True,
-        pool_recycle=3600
+        pool_recycle=3600,
     )
     return engine
 
@@ -202,7 +202,7 @@ def create_sql_database_for_domain(engine, domain_id: str):
         sql_database = SQLDatabase(
             engine,
             include_tables=table_names,
-            sample_rows_in_table_info=3 if INCLUDE_SAMPLE_ROWS else 0
+            sample_rows_in_table_info=3 if INCLUDE_SAMPLE_ROWS else 0,
         )
 
         return sql_database, table_names
@@ -231,17 +231,19 @@ SQL:"""
     return PromptTemplate(template)
 
 
-def create_table_schema_objs(sql_database, table_names: List[str]) -> List[SQLTableSchema]:
+def create_table_schema_objs(
+    sql_database, table_names: List[str]
+) -> List[SQLTableSchema]:
     """Create SQLTableSchema objects — minimal context, let LLM figure it out from schema"""
 
     # Hanya hint minimal tentang tipe kolom kritis, BUKAN jawaban lengkap
     IMRON_TABLE_CONTEXT = {
-        'transaction_enose': (
+        "transaction_enose": (
             "E-nose IoT sensor data. "
             "Note: data_send is JSON array, value is JSON object. "
             "Use JSON_EXTRACT / JSON_UNQUOTE for JSON columns."
         ),
-        'transaction_object_detection': (
+        "transaction_object_detection": (
             "Object detection results from edge devices. "
             "Note: value column is INTEGER (count of detected objects), not JSON."
         ),
@@ -252,16 +254,15 @@ def create_table_schema_objs(sql_database, table_names: List[str]) -> List[SQLTa
     for table_name in table_names:
         context_str = IMRON_TABLE_CONTEXT.get(table_name, f"Table {table_name}")
         table_schema_objs.append(
-            SQLTableSchema(
-                table_name=table_name,
-                context_str=context_str
-            )
+            SQLTableSchema(table_name=table_name, context_str=context_str)
         )
 
     return table_schema_objs
 
 
-def create_query_engine_with_retrieval(sql_database, table_names: List[str], embed_model):
+def create_query_engine_with_retrieval(
+    sql_database, table_names: List[str], embed_model
+):
     """Create query engine with ObjectIndex for top-K schema retrieval"""
 
     table_node_mapping = SQLTableNodeMapping(sql_database)
@@ -301,23 +302,25 @@ def create_direct_query_engine(sql_database, table_names: List[str]):
     return query_engine
 
 
-def get_retrieved_tables(obj_index, question: str, top_k: int = TOP_K_SCHEMA_FRAGMENTS) -> List[str]:
+def get_retrieved_tables(
+    obj_index, question: str, top_k: int = TOP_K_SCHEMA_FRAGMENTS
+) -> List[str]:
     """Get the tables that would be retrieved for a given question"""
     retriever = obj_index.as_retriever(similarity_top_k=top_k)
     retrieved_nodes = retriever.retrieve(question)
 
     retrieved_tables = []
     for node in retrieved_nodes:
-        if hasattr(node, 'node') and hasattr(node.node, 'metadata'):
-            table_name = node.node.metadata.get('table_name', 'unknown')
-        elif hasattr(node, 'metadata'):
-            table_name = node.metadata.get('table_name', 'unknown')
+        if hasattr(node, "node") and hasattr(node.node, "metadata"):
+            table_name = node.node.metadata.get("table_name", "unknown")
+        elif hasattr(node, "metadata"):
+            table_name = node.metadata.get("table_name", "unknown")
         else:
             text = str(node)
-            if 'Table ' in text:
-                table_name = text.split('Table ')[1].split()[0].strip(':')
+            if "Table " in text:
+                table_name = text.split("Table ")[1].split()[0].strip(":")
             else:
-                table_name = 'unknown'
+                table_name = "unknown"
         retrieved_tables.append(table_name)
 
     return retrieved_tables
@@ -332,12 +335,18 @@ def fix_sqlite_to_mysql(sql: str) -> str:
     sql = re.sub(r"strftime\s*\(\s*'%m'\s*,\s*(\w+(?:\.\w+)?)\s*\)", r"MONTH(\1)", sql)
     sql = re.sub(r"strftime\s*\(\s*'%d'\s*,\s*(\w+(?:\.\w+)?)\s*\)", r"DAY(\1)", sql)
     sql = re.sub(r"strftime\s*\(\s*'%H'\s*,\s*(\w+(?:\.\w+)?)\s*\)", r"HOUR(\1)", sql)
-    sql = re.sub(r"strftime\s*\(\s*'%Y-%m'\s*,\s*(\w+(?:\.\w+)?)\s*\)", r"DATE_FORMAT(\1, '%Y-%m')", sql)
-    sql = re.sub(r"strftime\s*\(\s*'%Y-%m-%d'\s*,\s*(\w+(?:\.\w+)?)\s*\)", r"DATE(\1)", sql)
+    sql = re.sub(
+        r"strftime\s*\(\s*'%Y-%m'\s*,\s*(\w+(?:\.\w+)?)\s*\)",
+        r"DATE_FORMAT(\1, '%Y-%m')",
+        sql,
+    )
+    sql = re.sub(
+        r"strftime\s*\(\s*'%Y-%m-%d'\s*,\s*(\w+(?:\.\w+)?)\s*\)", r"DATE(\1)", sql
+    )
     sql = re.sub(r"date\s*\(\s*'now'\s*\)", "CURDATE()", sql, flags=re.IGNORECASE)
     sql = re.sub(r"datetime\s*\(\s*'now'\s*\)", "NOW()", sql, flags=re.IGNORECASE)
 
-    if '||' in sql and 'SELECT' in sql.upper():
+    if "||" in sql and "SELECT" in sql.upper():
         sql = re.sub(r"(\S+)\s*\|\|\s*(\S+)", r"CONCAT(\1, \2)", sql)
 
     return sql
@@ -346,39 +355,39 @@ def fix_sqlite_to_mysql(sql: str) -> str:
 def extract_sql_from_response(response) -> str:
     """Extract and normalize SQL query from LlamaIndex response"""
 
-    if hasattr(response, 'metadata') and 'sql_query' in response.metadata:
-        raw_sql = response.metadata['sql_query'].strip()
+    if hasattr(response, "metadata") and "sql_query" in response.metadata:
+        raw_sql = response.metadata["sql_query"].strip()
     else:
         raw_sql = str(response)
 
     sql = raw_sql.strip()
-    sql = sql.replace('```sql', '').replace('```', '').strip()
+    sql = sql.replace("```sql", "").replace("```", "").strip()
 
     lines = []
-    for line in sql.split('\n'):
+    for line in sql.split("\n"):
         line = line.strip()
-        if not line or line.startswith('--') or line.startswith('#'):
+        if not line or line.startswith("--") or line.startswith("#"):
             continue
-        if '--' in line:
-            line = line.split('--')[0].strip()
+        if "--" in line:
+            line = line.split("--")[0].strip()
         if line:
             lines.append(line)
 
-    sql = ' '.join(lines)
-    sql = sql.rstrip(';').strip()
+    sql = " ".join(lines)
+    sql = sql.rstrip(";").strip()
     sql = fix_sqlite_to_mysql(sql)
 
-    sql = re.sub(r'\s+', ' ', sql)
-    sql = re.sub(r'\s*,\s*', ', ', sql)
-    sql = re.sub(r'\(\s+', '(', sql)
-    sql = re.sub(r'\s+\)', ')', sql)
-    sql = re.sub(r'\s+', ' ', sql).strip()
+    sql = re.sub(r"\s+", " ", sql)
+    sql = re.sub(r"\s*,\s*", ", ", sql)
+    sql = re.sub(r"\(\s+", "(", sql)
+    sql = re.sub(r"\s+\)", ")", sql)
+    sql = re.sub(r"\s+", " ", sql).strip()
 
     if len(sql) < 10:
         return "SELECT 1"
 
     sql_lower = sql.lower()
-    if not any(kw in sql_lower for kw in ['select', 'insert', 'update', 'delete']):
+    if not any(kw in sql_lower for kw in ["select", "insert", "update", "delete"]):
         return "SELECT 1"
 
     return sql
@@ -387,7 +396,7 @@ def extract_sql_from_response(response) -> str:
 def validate_prediction_file(predictions_file):
     """Validate predictions file"""
 
-    with open(predictions_file, 'r', encoding='utf-8') as f:
+    with open(predictions_file, "r", encoding="utf-8") as f:
         lines = f.readlines()
 
     valid_count = 0
@@ -399,7 +408,7 @@ def validate_prediction_file(predictions_file):
         if not line:
             continue
 
-        parts = line.split('\t')
+        parts = line.split("\t")
         if len(parts) != 2:
             invalid_count += 1
         else:
@@ -412,13 +421,13 @@ def validate_prediction_file(predictions_file):
             else:
                 valid_count += 1
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"VALIDATION SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"[OK] Valid: {valid_count}")
     print(f"[!] Warnings (SELECT 1): {warning_count}")
     print(f"[X] Invalid: {invalid_count}")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
     return valid_count, invalid_count
 
@@ -429,12 +438,18 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     safe_llm_name = get_safe_filename(LLM_MODEL)
 
-    predictions_file = os.path.join(OUTPUT_DIR, f"prediksi_imron_topk{TOP_K_SCHEMA_FRAGMENTS}_{safe_llm_name}_{timestamp}.txt")
-    metrics_file = os.path.join(OUTPUT_DIR, f"metric_imron_topk{TOP_K_SCHEMA_FRAGMENTS}_{safe_llm_name}_{timestamp}.csv")
+    predictions_file = os.path.join(
+        OUTPUT_DIR,
+        f"prediksi_imron_topk{TOP_K_SCHEMA_FRAGMENTS}_{safe_llm_name}_{timestamp}.txt",
+    )
+    metrics_file = os.path.join(
+        OUTPUT_DIR,
+        f"metric_imron_topk{TOP_K_SCHEMA_FRAGMENTS}_{safe_llm_name}_{timestamp}.csv",
+    )
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print(f"SQL GENERATION: LLAMAINDEX + IMRON DOMAIN (MySQL)")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"Method: NLSQLTableQueryEngine / SQLTableRetrieverQueryEngine")
     print(f"LLM Model: {LLM_MODEL}")
     print(f"Embedding Model: {EMBEDDING_MODEL}")
@@ -446,7 +461,7 @@ def main():
     print(f"\nOutput files:")
     print(f"  1. {predictions_file}")
     print(f"  2. {metrics_file}")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     # Setup LlamaIndex
     embed_model, llm = setup_llamaindex()
@@ -475,9 +490,9 @@ def main():
     metrics_data = []
     predictions = []
 
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"STARTING SQL GENERATION FOR IMRON DOMAIN")
-    print(f"{'='*80}\n")
+    print(f"{'=' * 80}\n")
 
     total_start_time = time.time()
     error_count = 0
@@ -486,23 +501,27 @@ def main():
     domain_cache = {}
 
     for i, q in enumerate(questions):
-        q_id = q['id']
-        question = q['question']
-        db_id = q['db_id']
+        q_id = q["id"]
+        question = q["question"]
+        db_id = q["db_id"]
 
-        print(f"[{i+1}/{len(questions)}] Q{q_id} ({db_id})")
+        print(f"[{i + 1}/{len(questions)}] Q{q_id} ({db_id})")
         print(f"  Question: {question[:80]}...")
 
         start_time = time.time()
-        retrieved_tables_str = 'N/A'
+        retrieved_tables_str = "N/A"
 
         try:
             if db_id not in domain_cache:
                 print(f"  [INFO] Setting up domain: {db_id}")
-                sql_database, table_names = create_sql_database_for_domain(mysql_engine, db_id)
+                sql_database, table_names = create_sql_database_for_domain(
+                    mysql_engine, db_id
+                )
 
                 if sql_database is None:
-                    raise Exception(f"Failed to create SQL database for domain '{db_id}'")
+                    raise Exception(
+                        f"Failed to create SQL database for domain '{db_id}'"
+                    )
 
                 print(f"  [INFO] Tables: {', '.join(table_names)}")
 
@@ -511,32 +530,42 @@ def main():
                     query_engine = create_direct_query_engine(sql_database, table_names)
                     obj_index = None
                 else:
-                    print(f"  [INFO] Building ObjectIndex for top-{TOP_K_SCHEMA_FRAGMENTS} schema retrieval...")
+                    print(
+                        f"  [INFO] Building ObjectIndex for top-{TOP_K_SCHEMA_FRAGMENTS} schema retrieval..."
+                    )
                     query_engine, obj_index = create_query_engine_with_retrieval(
                         sql_database, table_names, embed_model
                     )
 
                 domain_cache[db_id] = {
-                    'sql_database': sql_database,
-                    'query_engine': query_engine,
-                    'obj_index': obj_index,
-                    'tables': table_names
+                    "sql_database": sql_database,
+                    "query_engine": query_engine,
+                    "obj_index": obj_index,
+                    "tables": table_names,
                 }
             else:
-                query_engine = domain_cache[db_id]['query_engine']
-                obj_index = domain_cache[db_id]['obj_index']
-                table_names = domain_cache[db_id]['tables']
+                query_engine = domain_cache[db_id]["query_engine"]
+                obj_index = domain_cache[db_id]["obj_index"]
+                table_names = domain_cache[db_id]["tables"]
 
             if obj_index is not None:
                 try:
-                    retrieved_tables = get_retrieved_tables(obj_index, question, TOP_K_SCHEMA_FRAGMENTS)
-                    actual_retrieved = min(len(retrieved_tables), TOP_K_SCHEMA_FRAGMENTS)
-                    retrieved_tables_str = ', '.join(retrieved_tables[:TOP_K_SCHEMA_FRAGMENTS])
-                    print(f"  [RETR] Top-{actual_retrieved} tables retrieved: {retrieved_tables_str}")
+                    retrieved_tables = get_retrieved_tables(
+                        obj_index, question, TOP_K_SCHEMA_FRAGMENTS
+                    )
+                    actual_retrieved = min(
+                        len(retrieved_tables), TOP_K_SCHEMA_FRAGMENTS
+                    )
+                    retrieved_tables_str = ", ".join(
+                        retrieved_tables[:TOP_K_SCHEMA_FRAGMENTS]
+                    )
+                    print(
+                        f"  [RETR] Top-{actual_retrieved} tables retrieved: {retrieved_tables_str}"
+                    )
                 except Exception as e:
                     print(f"  [WARN] Could not log retrieved tables: {e}")
             else:
-                retrieved_tables_str = ', '.join(table_names)
+                retrieved_tables_str = ", ".join(table_names)
                 print(f"  [DIRECT] Using tables: {retrieved_tables_str}")
 
             print(f"  [PRCS] Generating SQL...")
@@ -547,7 +576,10 @@ def main():
                 print(f"  [WARNING] Empty/short SQL, using fallback")
                 pred_sql = "SELECT 1"
                 fallback_count += 1
-            elif not any(kw in pred_sql.lower() for kw in ['select', 'insert', 'update', 'delete']):
+            elif not any(
+                kw in pred_sql.lower()
+                for kw in ["select", "insert", "update", "delete"]
+            ):
                 print(f"  [WARNING] No SQL keyword, using fallback")
                 pred_sql = "SELECT 1"
                 fallback_count += 1
@@ -555,6 +587,7 @@ def main():
         except Exception as e:
             print(f"  [ERROR] {e}")
             import traceback
+
             traceback.print_exc()
             pred_sql = "SELECT 1"
             error_count += 1
@@ -564,19 +597,21 @@ def main():
 
         predictions.append(f"{pred_sql}\t{db_id}")
 
-        metrics_data.append({
-            'question_id': q_id,
-            'db_id': db_id,
-            'question': question,
-            'predicted_sql': pred_sql,
-            'retrieved_tables': retrieved_tables_str,
-            'latency_seconds': round(latency, 4),
-            'llm_model': LLM_MODEL,
-            'embedding_model': EMBEDDING_MODEL,
-            'top_k': TOP_K_SCHEMA_FRAGMENTS,
-            'method': 'IMRON_MySQL_NLSQLTableQueryEngine',
-            'timestamp': datetime.now().isoformat()
-        })
+        metrics_data.append(
+            {
+                "question_id": q_id,
+                "db_id": db_id,
+                "question": question,
+                "predicted_sql": pred_sql,
+                "retrieved_tables": retrieved_tables_str,
+                "latency_seconds": round(latency, 4),
+                "llm_model": LLM_MODEL,
+                "embedding_model": EMBEDDING_MODEL,
+                "top_k": TOP_K_SCHEMA_FRAGMENTS,
+                "method": "IMRON_MySQL_NLSQLTableQueryEngine",
+                "timestamp": datetime.now().isoformat(),
+            }
+        )
 
         display_sql = pred_sql[:80] + "..." if len(pred_sql) > 83 else pred_sql
         print(f"  [OK] {latency:.2f}s: {display_sql}\n")
@@ -585,9 +620,13 @@ def main():
     avg_latency = total_time / len(questions) if questions else 0
 
     # ==================== LATENCY SUMMARY ====================
-    all_latencies = [m['latency_seconds'] for m in metrics_data]
-    successful_latencies = [m['latency_seconds'] for m in metrics_data if m['predicted_sql'] != 'SELECT 1']
-    fallback_latencies = [m['latency_seconds'] for m in metrics_data if m['predicted_sql'] == 'SELECT 1']
+    all_latencies = [m["latency_seconds"] for m in metrics_data]
+    successful_latencies = [
+        m["latency_seconds"] for m in metrics_data if m["predicted_sql"] != "SELECT 1"
+    ]
+    fallback_latencies = [
+        m["latency_seconds"] for m in metrics_data if m["predicted_sql"] == "SELECT 1"
+    ]
 
     def calc_avg(latencies):
         return sum(latencies) / len(latencies) if latencies else 0
@@ -609,26 +648,36 @@ def main():
     # Per-domain avg latency
     domain_latencies = {}
     for m in metrics_data:
-        db = m['db_id']
+        db = m["db_id"]
         if db not in domain_latencies:
             domain_latencies[db] = []
-        domain_latencies[db].append(m['latency_seconds'])
+        domain_latencies[db].append(m["latency_seconds"])
 
     # ==================== SAVE RESULTS ====================
 
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"SAVING RESULTS")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
 
-    with open(predictions_file, 'w', encoding='utf-8') as f:
+    with open(predictions_file, "w", encoding="utf-8") as f:
         for pred in predictions:
-            f.write(pred + '\n')
+            f.write(pred + "\n")
     print(f"  [OK] Saved predictions: {predictions_file}")
 
-    with open(metrics_file, 'w', newline='', encoding='utf-8') as f:
-        fieldnames = ['question_id', 'db_id', 'question', 'predicted_sql',
-                      'retrieved_tables', 'latency_seconds', 'llm_model',
-                      'embedding_model', 'top_k', 'method', 'timestamp']
+    with open(metrics_file, "w", newline="", encoding="utf-8") as f:
+        fieldnames = [
+            "question_id",
+            "db_id",
+            "question",
+            "predicted_sql",
+            "retrieved_tables",
+            "latency_seconds",
+            "llm_model",
+            "embedding_model",
+            "top_k",
+            "method",
+            "timestamp",
+        ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         writer.writerows(metrics_data)
@@ -638,9 +687,9 @@ def main():
 
     # ==================== SUMMARY ====================
 
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"GENERATION COMPLETE!")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
     print(f"Domain: IMRON (MySQL)")
     print(f"Method: NLSQLTableQueryEngine (direct) / SQLTableRetrieverQueryEngine")
     print(f"LLM: {LLM_MODEL} (temp={LLM_TEMPERATURE})")
@@ -655,7 +704,11 @@ def main():
     print(f"  Fallbacks (SELECT 1): {fallback_count}")
     print(f"  Valid: {valid_count}")
     print(f"  Invalid: {invalid_count}")
-    print(f"  Success Rate: {((len(questions)-fallback_count)/len(questions)*100):.1f}%" if questions else "  N/A")
+    print(
+        f"  Success Rate: {((len(questions) - fallback_count) / len(questions) * 100):.1f}%"
+        if questions
+        else "  N/A"
+    )
     print(f"\nLatency (per query):")
     print(f"  Avg (all):        {avg_all:.2f}s")
     print(f"  Avg (successful): {avg_success:.2f}s")
@@ -664,7 +717,7 @@ def main():
     print(f"  Median:           {median_all:.2f}s")
     print(f"  Min:              {min_all:.2f}s")
     print(f"  Max:              {max_all:.2f}s")
-    print(f"  Total Time:       {total_time:.2f}s ({total_time/60:.2f}m)")
+    print(f"  Total Time:       {total_time:.2f}s ({total_time / 60:.2f}m)")
     print(f"\nLatency per Domain:")
     for db, lats in sorted(domain_latencies.items()):
         print(f"  {db}: avg {calc_avg(lats):.2f}s ({len(lats)} queries)")
@@ -674,16 +727,16 @@ def main():
 
     # ==================== DOMAIN BREAKDOWN ====================
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"DOMAIN BREAKDOWN")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     domain_counts = {}
     for q in questions:
-        db = q['db_id']
+        db = q["db_id"]
         domain_counts[db] = domain_counts.get(db, 0) + 1
     for db, count in domain_counts.items():
         print(f"  {db}: {count} questions")
-    print(f"{'='*60}\n")
+    print(f"{'=' * 60}\n")
 
 
 if __name__ == "__main__":

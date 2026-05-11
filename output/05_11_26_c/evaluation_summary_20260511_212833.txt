@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_deepseek-r1_1.5b-nothink_20260511_212441.txt
+Gold: answer.sql
+Database: localhost:3306/endpoint
+Date: 2026-05-11T21:28:34.004561
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 0/45 = 0.0%
+Execution Accuracy (EX): 1/45 = 2.2%
+EX (excl. SELECT 1): 0/0 = 0.0%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 45/45 = 100.0%
+Execution Validity: 45/45 = 100.0%
+SELECT 1 Fallbacks: 45/45 = 100.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 0.208ms
+Min: 0.140ms
+Max: 0.396ms
+Median: 0.194ms
+P95: 0.343ms
+Total: 9.357ms
+Queries Measured: 45
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 0
+Gold Error Only: 0

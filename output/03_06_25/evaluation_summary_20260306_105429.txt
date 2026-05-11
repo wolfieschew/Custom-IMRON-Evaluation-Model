@@ -1,0 +1,32 @@
+EVALUATION SUMMARY
+============================================================
+Predictions: output\prediksi_imron_topk3_granite3.3_2b_20260306_104526.txt
+Gold: answer.sql
+Database: localhost:3306/example_endpoint
+Date: 2026-03-06T10:54:29.495015
+
+Total Questions: 45
+
+--- Accuracy ---
+Exact Set Match (ESM): 8/45 = 17.8%
+Execution Accuracy (EX): 16/45 = 35.6%
+EX (excl. SELECT 1): 16/45 = 35.6%
+
+--- Syntax & Validity ---
+Syntax Validity (VX): 42/45 = 93.3%
+Execution Validity: 42/45 = 93.3%
+SELECT 1 Fallbacks: 0/45 = 0.0%
+
+--- Latency (Predicted SQL) ---
+Avg: 6.957ms
+Min: 0.261ms
+Max: 47.376ms
+Median: 2.862ms
+P95: 32.381ms
+Total: 292.210ms
+Queries Measured: 42
+
+--- Error Analysis ---
+Both Error: 0
+Pred Error Only: 3
+Gold Error Only: 0
