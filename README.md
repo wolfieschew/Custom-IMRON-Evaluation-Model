@@ -83,3 +83,20 @@ Berikut adalah diagram alur proses evaluasi model LLM pada alur kasus IMRON:
    DB_PORT=3306
    ```
 4. Jalankan script prediksi dan evaluasi sesuai petunjuk penggunaan di masing-masing file.
+
+## Acknowledgements & Citation
+
+Skrip evaluasi (`evaluation.py`) dalam proyek ini diadaptasi dari repositori [Spider](https://github.com/taoyds/spider) yang dikembangkan oleh Yu et al. untuk metric **Exact Set Match (ESM)** dan **Execution Accuracy (EX)**.
+
+```bibtex
+@inproceedings{Yu&al.18c,
+  title     = {Spider: A Large-Scale Human-Labeled Dataset for Complex and Cross-Domain Semantic Parsing and Text-to-SQL Task},
+  author    = {Tao Yu and Rui Zhang and Kai Yang and Michihiro Yasunaga and Dongxu Wang and Zifan Li and James Ma and Irene Li and Qingning Yao and Shanelle Roman and Zilin Zhang and Dragomir Radev},
+  booktitle = "Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing",
+  address   = "Brussels, Belgium",
+  publisher = "Association for Computational Linguistics",
+  year      = 2018
+}
+```
+
+Repositori asli: [https://github.com/taoyds/spider](https://github.com/taoyds/spider)
