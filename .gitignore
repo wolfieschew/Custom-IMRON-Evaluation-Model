@@ -1,0 +1,11 @@
+venv/
+.venv/
+env/
+unused_script/
+script_documenation.md
+script_documentation.txt
+data/
+document/
+latency/
+output/
+split_dev_sql.py
